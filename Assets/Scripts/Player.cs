@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private float _yOutDown = -10.83237f;
     public float horizontalInput;
     public float verticalInput;
+    [SerializeField]
+    private GameObject _laserPrefab;
     
     // Start is called before the first frame update
     void Start()
@@ -26,6 +28,17 @@ public class Player : MonoBehaviour
     {
 
         CalculateMovement();
+
+        //if I hold down the space key, fire a laser bolt
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(_laserPrefab, transform.position,Quaternion.identity);
+                
+
+            
+            Debug.Log("You fired a laser bolt");
+        }
 
     }
 
