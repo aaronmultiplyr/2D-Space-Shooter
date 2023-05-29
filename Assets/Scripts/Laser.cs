@@ -9,6 +9,8 @@ public class Laser : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     private float _speed = 8.0f;
+    [SerializeField]
+    private float _outofBounds = 12.0f;
     void Start()
     {
         
@@ -19,6 +21,12 @@ public class Laser : MonoBehaviour
     {
         //translate laser up using transform.translate(Vector3.up * speed * time.DeltaTime)
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
+
+        //if position of laser is greater than out of bound marker, destory that laser
+        if(transform.position.y > _outofBounds)
+        {
+            Destroy(this.gameObject);
+        }
 
     }
 }

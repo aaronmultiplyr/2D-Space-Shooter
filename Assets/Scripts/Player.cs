@@ -15,6 +15,12 @@ public class Player : MonoBehaviour
     public float verticalInput;
     [SerializeField]
     private GameObject _laserPrefab;
+    [SerializeField] 
+    private Vector3 laserOffset = new Vector3(0, 1, 0);
+    [SerializeField]
+    private float _fireRate = 0.5f;
+    [SerializeField]
+    private float _nextFire = 0.0f;
     
     // Start is called before the first frame update
     void Start()
@@ -28,17 +34,8 @@ public class Player : MonoBehaviour
     {
 
         CalculateMovement();
-
-        //if I hold down the space key, fire a laser bolt
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(_laserPrefab, transform.position,Quaternion.identity);
-                
-
-            
-            Debug.Log("You fired a laser bolt");
-        }
+        FireLaser();
+       
 
     }
 
@@ -75,6 +72,18 @@ public class Player : MonoBehaviour
         else if (transform.position.y < _yOutDown)
         {
             transform.position = new Vector3(transform.position.x, _yOutDown, transform.position.z);
+        }
+
+    }
+    void FireLaser()
+    {
+        //if I hold down the space key, fire a laser bolt
+
+        if (Input.GetKey(KeyCode.Space) && Time.time > _nextFire)
+        {
+            _nextFire = Time.time + _fireRate;
+            Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
+            Debug.Log("You fired a laser bolt");
         }
     }
 }
