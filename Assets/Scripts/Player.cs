@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.5f;
     [SerializeField]
     private float _nextFire = 0.0f;
+    [SerializeField] private int _lives = 3;
     
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
 
         CalculateMovement();
         FireLaser();
+        
        
 
     }
@@ -84,6 +86,17 @@ public class Player : MonoBehaviour
             _nextFire = Time.time + _fireRate;
             Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
             Debug.Log("You fired a laser bolt");
+        }
+    }
+
+    public void Damage()
+    {
+        _lives--;
+        Debug.Log($"Current lives: {_lives}");
+
+        if (_lives < 1)
+        {
+            Destroy(this.gameObject);
         }
     }
 }
