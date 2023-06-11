@@ -5,22 +5,20 @@ using UnityEngine;
 public class Player : MonoBehaviour
 
 {
-    [SerializeField]
-    private int _speed = 1;
+    [SerializeField] private int _speed = 1;
     private float _xOutLeft = -19.5449f;
     private float _xOutRight = 19.5449f;
     private float _yOutUp = 10.83237f;
     private float _yOutDown = -10.83237f;
     public float horizontalInput;
     public float verticalInput;
-    [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField] 
-    private Vector3 laserOffset = new Vector3(0, 1, 0);
-    [SerializeField]
-    private float _fireRate = 0.5f;
-    [SerializeField]
-    private float _nextFire = 0.0f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private bool _isTripleShotActive;
+    [SerializeField] private Vector3 laserOffset = new Vector3(0, 1, 0);
+    [SerializeField] private Vector3 _triplelaserOffset = new Vector3(2, 1, 0);
+    [SerializeField] private float _fireRate = 0.5f;
+    [SerializeField] private float _nextFire = 0.0f;
     [SerializeField] private int _lives = 3;
     private SpawnManager _spawnManager;
     
@@ -86,8 +84,19 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && Time.time > _nextFire)
         {
             _nextFire = Time.time + _fireRate;
-            Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
-            Debug.Log("You fired a laser bolt");
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position + _triplelaserOffset, Quaternion.identity);
+                Debug.Log("You fired a triple shot laser bolt");
+            }
+
+            else 
+            {
+                Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
+                Debug.Log("You fired a laser bolt");
+            }
+            
+            
         }
     }
 
@@ -101,5 +110,10 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+    }
+
+    public void TripleShotActive()
+    {
+        _isTripleShotActive = true;
     }
 }

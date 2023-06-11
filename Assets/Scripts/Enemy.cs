@@ -48,17 +48,19 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Laser Bolt")
         {
-            Destroy(this.gameObject);
+            
             Destroy(other.gameObject);
-            Debug.Log("Game Object Destroyed");
+            Debug.Log("Laser Destroyed");
+            Destroy(this.gameObject);
         }
 
         if (other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
+            player.Damage();
             Destroy(this.gameObject);
             //other.transform.GetComponent<Player>().Damage();
-            player.Damage();
+            
         }
     }
 

@@ -29,7 +29,6 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnRoutine()
     {
         while (_stopSpawning == false) 
-
         {
             float _xRandomRange = Random.Range(-19.67f, 19.67f);
             Vector3 spawnPosition = new Vector3(_xRandomRange, 13.52f, 0);
