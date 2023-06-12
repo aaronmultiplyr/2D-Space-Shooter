@@ -115,5 +115,18 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
+        StartCoroutine(TripleShotPowerDown());
+
+    }
+
+   IEnumerator TripleShotPowerDown()
+    {
+        if (_isTripleShotActive == true)
+        {
+            yield return new WaitForSeconds(5f);
+            Debug.Log("Triple Shot Has Ended");
+            _isTripleShotActive = false;
+            
+        }
     }
 }

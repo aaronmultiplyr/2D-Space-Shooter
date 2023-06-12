@@ -10,23 +10,37 @@ public class TripleShotPowerUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if(transform.position.y < -12.14f)
+        {
+            Destroy(this.gameObject);
+        }
         
     }
+
+    
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
-            Destroy(this.gameObject);
-            _player.TripleShotActive();
+            _player = other.transform.GetComponent<Player>();
+
+            if (_player != null)
+            {
+                Destroy(this.gameObject);
+                _player.TripleShotActive();
+            }
             
         }
     }
+
+   
 }

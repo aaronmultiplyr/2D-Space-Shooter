@@ -25,6 +25,11 @@ public class Laser : MonoBehaviour
         //if position of laser is greater than out of bound marker, destory that laser
         if(transform.position.y > _outofBounds)
         {
+            if(transform.parent != null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
+            
             Destroy(this.gameObject);
         }
 
