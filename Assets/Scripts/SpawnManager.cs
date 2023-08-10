@@ -8,8 +8,10 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private GameObject _enemy;
     [SerializeField] private GameObject _enemyContainer;
-    [SerializeField] private GameObject _tripleShotPowerUp;
+    //[SerializeField] private GameObject _tripleShotPowerUp;
+    [SerializeField] private GameObject[] _powerUps;
     [SerializeField] private GameObject _powerUpContainer;
+
 
     private bool _stopSpawning = false;
     
@@ -35,6 +37,8 @@ public class SpawnManager : MonoBehaviour
         {
             float _xRandomRange = Random.Range(-19.67f, 19.67f);
             Vector3 spawnPosition = new Vector3(_xRandomRange, 13.52f, 0);
+           
+
 
             //Instatiate enemy prefab
             GameObject newEnemy = Instantiate(_enemy,spawnPosition, Quaternion.identity);
@@ -49,10 +53,10 @@ public class SpawnManager : MonoBehaviour
     {
         while (_stopSpawning == false)
         {
-                float _xRandomRange = Random.Range(-19.67f, 19.67f);
+            float _xRandomRange = Random.Range(-19.67f, 19.67f);
             Vector3 spawnPosition = new Vector3(_xRandomRange, 13.52f, 0);
-
-            GameObject newTripleShotPowerUp = Instantiate(_tripleShotPowerUp,spawnPosition, Quaternion.identity);
+            int _randomPowerUp = Random.Range(0, 3);
+            GameObject newTripleShotPowerUp = Instantiate(_powerUps[_randomPowerUp],spawnPosition, Quaternion.identity);
             newTripleShotPowerUp.transform.parent = _powerUpContainer.transform;
             float _randomTimer = Random.Range(5f, 8f);
             yield return new WaitForSeconds (_randomTimer);

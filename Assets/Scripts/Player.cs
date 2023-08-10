@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _nextFire = 0.0f;
     [SerializeField] private int _lives = 3;
     private SpawnManager _spawnManager;
+    [SerializeField] private bool _speedUpActive;
+    [SerializeField] private bool _isShieldActive;
     
     // Start is called before the first frame update
     void Start()
@@ -119,6 +121,18 @@ public class Player : MonoBehaviour
 
     }
 
+    public void SpeedUpActive()
+    {
+        _speedUpActive = true;
+       StartCoroutine(SpeedUpPowerDown());
+    }
+
+    public void ShieldActive()
+    {
+        _isShieldActive = true;
+        StartCoroutine(ShieldDown());
+    }
+
    IEnumerator TripleShotPowerDown()
     {
         if (_isTripleShotActive == true)
@@ -128,5 +142,27 @@ public class Player : MonoBehaviour
             _isTripleShotActive = false;
             
         }
+    }
+
+    IEnumerator SpeedUpPowerDown()
+    {
+        if(_speedUpActive == true)
+        {
+            _speed = 20;
+            yield return new WaitForSeconds(5f);
+            _speed = 10;
+            _speedUpActive = false;
+        }
+    }
+
+    IEnumerator ShieldDown()
+    {
+        if (_isShieldActive == true)
+        {
+            Debug.Log("Shield is Active");
+            yield return new WaitForSeconds(5);
+            _isShieldActive = false;
+        }
+
     }
 }
