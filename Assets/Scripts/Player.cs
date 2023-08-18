@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Player : MonoBehaviour
 
 {
@@ -23,13 +25,38 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField] private bool _speedUpActive;
     [SerializeField] private bool _isShieldActive;
-    
+    [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private int _score;
+    [SerializeField] private UIManager _uiManager;
+    [SerializeField] private GameObject _leftEngine;
+    [SerializeField] private GameObject _rightEngine;
+    [SerializeField] private AudioClip _laserSoundClip;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _explsionSoundClip;
     // Start is called before the first frame update
     void Start()
     {
         //gives player object a starting position = new position (0,0,0)
         transform.position = new Vector3(0,0,0);
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _audioSource = GetComponent<AudioSource>();
+
+        if( _audioSource == null )
+        {
+            Debug.LogError("Audio source is not working");
+        }
+        
+
+        if (_uiManager == null )
+        {
+            Debug.Log("The UI Manager is Null");
+        }
+
+        else
+        {
+            _audioSource.clip = _laserSoundClip;
+        }
     }
 
     // Update is called once per frame
@@ -43,7 +70,20 @@ public class Player : MonoBehaviour
 
     }
 
-    void CalculateMovement()
+    private void OnTriggerEnter2D(Collider2D other)
+
+    {
+        Debug.Log($"Hit {other.transform.name}");
+
+        if (other.tag == "Enemy Laser")
+        {
+
+            Destroy(other.gameObject);
+           
+        }
+    }
+
+        void CalculateMovement()
     {
         //transform.Translate(Vector3.right) is the same as transform.Translate(new Vector3(1, 0, 0));
         //transform.Translate(new Vector3(-1, 0, 0) * _speed * Time.deltaTime); goes left at a speed determined by the speed variable
@@ -89,28 +129,47 @@ public class Player : MonoBehaviour
             if (_isTripleShotActive == true)
             {
                 Instantiate(_tripleShotPrefab, transform.position + _triplelaserOffset, Quaternion.identity);
-                Debug.Log("You fired a triple shot laser bolt");
+                
             }
 
             else 
             {
                 Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
-                Debug.Log("You fired a laser bolt");
+               
             }
-            
-            
+            _audioSource.Play();
         }
     }
 
     public void Damage()
     {
+        if (_isShieldActive == true)
+        {
+            Debug.Log("Shield Hit!");
+            Debug.Log($"Lives Left: {_lives} ");
+            _shieldVisualizer.SetActive(false);
+            _isShieldActive = false;
+            return;
+        }
         _lives--;
         Debug.Log($"Current lives: {_lives}");
+        _uiManager.UpdateLives(_lives);
+        if(_lives <= 2 && _lives > 0)
+        {
+            _leftEngine.SetActive(true);
+        }
+
+        if(_lives == 1)
+        {
+            _rightEngine.SetActive(true);
+        }
 
         if (_lives < 1)
         {
+            
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
+            
         }
     }
 
@@ -131,6 +190,12 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         StartCoroutine(ShieldDown());
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
     }
 
    IEnumerator TripleShotPowerDown()
@@ -159,8 +224,10 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive == true)
         {
+            _shieldVisualizer.SetActive(true);
             Debug.Log("Shield is Active");
-            yield return new WaitForSeconds(5);
+
+            yield return new WaitForSeconds(30);
             _isShieldActive = false;
         }
 

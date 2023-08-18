@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -21,8 +22,7 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnPowerUpRoutine());
+        
     }
 
     // Update is called once per frame
@@ -31,8 +31,17 @@ public class SpawnManager : MonoBehaviour
         
     }
 
+    public void StartSpawning()
+    {
+        
+        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
+    }
+
     IEnumerator SpawnEnemyRoutine()
     {
+        yield return new WaitForSeconds(1.5f);
+
         while (_stopSpawning == false) 
         {
             float _xRandomRange = Random.Range(-19.67f, 19.67f);
@@ -51,6 +60,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUpRoutine()
     {
+        yield return new WaitForSeconds(1.5f);
+
         while (_stopSpawning == false)
         {
             float _xRandomRange = Random.Range(-19.67f, 19.67f);

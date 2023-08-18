@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Laser Bolt
   - SpawnManager
+  - Enemy Laser
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Post Processing
   - 
   - 
   - 
@@ -48,4 +49,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 221118121
+    locked: 0
+  - name: Most Front
+    uniqueID: 432002225
     locked: 0

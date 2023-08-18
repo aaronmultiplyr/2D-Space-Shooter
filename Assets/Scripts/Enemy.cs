@@ -11,6 +11,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _speed = 4.0f;
     [SerializeField] private float _outOfBound = -12.24f;
     [SerializeField] private float _spawnAgain = 13.52f;
+    [SerializeField] private Player _player;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private GameObject _laser;
+    [SerializeField] private Vector3 _laserPosition;
     
     
 
@@ -19,7 +24,26 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        _audioSource = GetComponent<AudioSource>();
+
+        if (_player == null )
+        {
+            Debug.LogError("Player is Null");
+        }
+        _animator = GetComponent<Animator>();
+
+        if (_animator == null )
+        {
+            Debug.LogError("Anim is null");
+        }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("Audio source is null");
+        }
+
+        StartCoroutine(LaserFire());
     }
 
     // Update is called once per frame
@@ -50,18 +74,41 @@ public class Enemy : MonoBehaviour
         {
             
             Destroy(other.gameObject);
-            Debug.Log("Laser Destroyed");
-            Destroy(this.gameObject);
+            if (_player != null )
+            {
+                _player.AddScore(10);
+            }
+
+            _animator.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.6f);
+            _audioSource.Play();
+            
         }
 
         if (other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
             player.Damage();
-            Destroy(this.gameObject);
+            _animator.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.6f);
+            _audioSource.Play();
             //other.transform.GetComponent<Player>().Damage();
             
         }
+    }
+
+    //coroutine
+    //random timer to wait
+    // instantiate laser
+
+    IEnumerator LaserFire()
+    {
+        yield return new WaitForSeconds(Random.Range(2f,4.5f));
+        Instantiate(_laser, transform.position + _laserPosition, Quaternion.identity);
     }
 
 
